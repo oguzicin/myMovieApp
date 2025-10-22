@@ -274,6 +274,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 50,
+    overflow: "hidden",
   },
   title: {
     fontSize: 32,

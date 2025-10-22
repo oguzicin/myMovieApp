@@ -2,7 +2,9 @@ import * as Font from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { Slot } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Dimensions, StyleSheet } from "react-native";
+import { Animated, Dimensions, Platform, StyleSheet, View } from "react-native";
+
+const MAX_WIDTH = 480; // Web için max genişlik (telefon boyutu)
 
 export default function RootLayout() {
   const [showSplash, setShowSplash] = useState(true);
@@ -13,21 +15,18 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function loadResources() {
-     
       await Font.loadAsync({
         BBHSansBartle: require("../assets/images/fonts/BBHSansBartle-Regular.ttf"),
         MontserratRegular: require("../assets/images/fonts/Montserrat-Regular.ttf"),
       });
       setFontsLoaded(true);
 
-      
       Animated.timing(opacity, {
         toValue: 1,
         duration: 800,
         useNativeDriver: false,
       }).start();
 
-      // Splash fade-out
       const timer = setTimeout(() => {
         Animated.timing(opacity, {
           toValue: 0,
@@ -38,10 +37,8 @@ export default function RootLayout() {
 
       return () => clearTimeout(timer);
     }
-
     loadResources();
   }, []);
-
 
   if (!fontsLoaded) return null;
 
@@ -54,10 +51,7 @@ export default function RootLayout() {
         style={styles.splashContainer}
       >
         <Animated.Text
-          style={[
-            styles.splashText,
-            { opacity, fontFamily: "BBHSansBartle", fontSize: splashFontSize },
-          ]}
+          style={[styles.splashText, { opacity, fontFamily: "BBHSansBartle", fontSize: splashFontSize }]}
         >
           m o v i e z
         </Animated.Text>
@@ -65,10 +59,28 @@ export default function RootLayout() {
     );
   }
 
-  return <Slot />;
+  return (
+    <View style={styles.outerContainer}>
+      <View style={[styles.innerContainer, { maxWidth: Platform.OS === "web" ? MAX_WIDTH : "100%" }]}>
+        <Slot />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: "#000", 
+    display: "flex",
+    alignItems: "center",
+    overflow: "hidden", 
+  },
+  innerContainer: {
+    flex: 1,
+    width: "100%",
+    alignSelf: "center",
+  },
   splashContainer: {
     flex: 1,
     justifyContent: "center",

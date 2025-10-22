@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 
 import {
@@ -9,6 +9,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -49,8 +50,11 @@ export default function MovieDetail() {
       style={styles.gradientParent}
     >
       {/* Moviez Başlığı */}
-      <Text style={[styles.moviezHeader]}>m o v i e z</Text>
-
+      <TouchableOpacity onPress={() => router.back()}>
+        <Text style={[styles.moviezHeader, { marginTop: 40 }]}>
+          m o v i e z
+        </Text>
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {movie.Poster && movie.Poster !== "N/A" && (
           <Image source={{ uri: movie.Poster }} style={styles.image} />
@@ -82,14 +86,16 @@ export default function MovieDetail() {
                     marginBottom: 0,
                   }}
                 >
-                  <Text style={{ fontSize: 20, marginRight: 6, opacity:0.8 }}>🍅</Text>
+                  <Text style={{ fontSize: 20, marginRight: 6, opacity: 0.8 }}>
+                    🍅
+                  </Text>
                   <Text
                     style={{
                       color: "#FA320A",
                       fontSize: 16,
                       fontWeight: "600",
-                      paddingTop:4,
-                      opacity:0.8
+                      paddingTop: 4,
+                      opacity: 0.8,
                     }}
                   >
                     {rating.Value}
@@ -131,6 +137,7 @@ export default function MovieDetail() {
 const styles = StyleSheet.create({
   gradientParent: {
     flex: 1,
+    overflow: "hidden",
   },
   moviezHeader: {
     fontFamily: "BBHSansBartle",
@@ -184,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: "center", // yatayda ortala
     alignItems: "center", // dikeyde ortala
     marginTop: 12,
-    borderWidth:20,
+    borderWidth: 20,
   },
   rottenEmoji: {
     fontSize: 10,
@@ -193,7 +200,7 @@ const styles = StyleSheet.create({
   rottenText: {
     color: "#FA320A", // Rotten Tomatoes teması
     fontSize: 160,
-    borderWidth:20,
+    borderWidth: 20,
     fontWeight: "600",
     fontFamily: "MontserratRegular",
   },
