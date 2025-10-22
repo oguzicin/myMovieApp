@@ -165,104 +165,106 @@ const HomeScreen = () => {
 
   return (
     <LinearGradient
-      colors={["#000000", "#290404", "#400707", "#000000"]} // siyah -> kırmızı gradyan
+      colors={["#000000", "#290404", "#400707", "#000000"]}
       style={styles.container}
     >
-      <Text style={styles.title}>m o v i e z</Text>
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>m o v i e z</Text>
 
-      {/* 🔍 Search Bar */}
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search for a movie..."
-          placeholderTextColor="lightgrey"
-          value={query}
-          onChangeText={handleDropdownSearch}
-          returnKeyType="search"
-          onSubmitEditing={handleSearch}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleSearch}>
-          <FontAwesome name="search" size={20} color="white" />
-        </TouchableOpacity>
-      </View>
-
-      {/* 🪟 Dropdown */}
-      {showDropdown && (
-        <View style={styles.dropdown}>
-          <FlatList
-            data={dropdownResults.slice(0, 6)}
-            keyExtractor={(item) => item.imdbID}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.dropdownItem}
-                onPress={() => handleSelectMovie(item)}
-              >
-                {item.Poster && item.Poster !== "N/A" && (
-                  <Image
-                    source={{ uri: item.Poster }}
-                    style={styles.dropdownPoster}
-                  />
-                )}
-                <Text style={{ color: "white", marginLeft: 8 }}>
-                  {item.Title} ({item.Year})
-                </Text>
-              </TouchableOpacity>
-            )}
+        {/* 🔍 Search Bar */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search for a movie..."
+            placeholderTextColor="lightgrey"
+            value={query}
+            onChangeText={handleDropdownSearch}
+            returnKeyType="search"
+            onSubmitEditing={handleSearch}
           />
+          <TouchableOpacity style={styles.button} onPress={handleSearch}>
+            <FontAwesome name="search" size={20} color="white" />
+          </TouchableOpacity>
         </View>
-      )}
 
-      {/* Loading */}
-      {loading && (
-        <ActivityIndicator
-          size="large"
-          color="#3B82F6"
-          style={{ marginTop: 16 }}
-        />
-      )}
-
-      {/* Movie Grid */}
-      <FlatList
-        data={results}
-        keyExtractor={(item) => item.imdbID}
-        numColumns={2}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
-        contentContainerStyle={{ marginTop: 16, paddingBottom: 80 }}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.movieCard}
-            onPress={() => handleSelectMovie(item)}
-          >
-            {item.Poster && item.Poster !== "N/A" ? (
-              <Image source={{ uri: item.Poster }} style={styles.poster} />
-            ) : (
-              <View
-                style={[
-                  styles.poster,
-                  { justifyContent: "center", alignItems: "center" },
-                ]}
-              >
-                <Text style={{ color: "#D1D5DB" }}>No Poster</Text>
-              </View>
-            )}
-
-            <Text style={styles.movieTitle}>{item.Title}</Text>
-            <Text style={styles.movieYear}>{item.Year}</Text>
-
-            {/* 🌟 Rotten Tomatoes Badge */}
-            {item.Ratings &&
-              Array.isArray(item.Ratings) &&
-              item.Ratings.some((r) => r.Source === "Rotten Tomatoes") && (
-                <View style={styles.rtBadge}>
-                  <Text style={styles.rtText}>
-                    {item.Ratings.find((r) => r.Source === "Rotten Tomatoes")
-                      ?.Value ?? "N/A"}
+        {/* 🪟 Dropdown */}
+        {showDropdown && (
+          <View style={styles.dropdown}>
+            <FlatList
+              data={dropdownResults.slice(0, 6)}
+              keyExtractor={(item) => item.imdbID}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.dropdownItem}
+                  onPress={() => handleSelectMovie(item)}
+                >
+                  {item.Poster && item.Poster !== "N/A" && (
+                    <Image
+                      source={{ uri: item.Poster }}
+                      style={styles.dropdownPoster}
+                    />
+                  )}
+                  <Text style={{ color: "white", marginLeft: 8 }}>
+                    {item.Title} ({item.Year})
                   </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
+
+        {/* Loading */}
+        {loading && (
+          <ActivityIndicator
+            size="large"
+            color="#3B82F6"
+            style={{ marginTop: 16 }}
+          />
+        )}
+
+        {/* Movie Grid */}
+        <FlatList
+          data={results}
+          keyExtractor={(item) => item.imdbID}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: "space-between" }}
+          contentContainerStyle={{ marginTop: 16, paddingBottom: 80 }}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.movieCard}
+              onPress={() => handleSelectMovie(item)}
+            >
+              {item.Poster && item.Poster !== "N/A" ? (
+                <Image source={{ uri: item.Poster }} style={styles.poster} />
+              ) : (
+                <View
+                  style={[
+                    styles.poster,
+                    { justifyContent: "center", alignItems: "center" },
+                  ]}
+                >
+                  <Text style={{ color: "#D1D5DB" }}>No Poster</Text>
                 </View>
               )}
-          </TouchableOpacity>
-        )}
-      />
+
+              <Text style={styles.movieTitle}>{item.Title}</Text>
+              <Text style={styles.movieYear}>{item.Year}</Text>
+
+              {/* 🌟 Rotten Tomatoes Badge */}
+              {item.Ratings &&
+                Array.isArray(item.Ratings) &&
+                item.Ratings.some((r) => r.Source === "Rotten Tomatoes") && (
+                  <View style={styles.rtBadge}>
+                    <Text style={styles.rtText}>
+                      {item.Ratings.find((r) => r.Source === "Rotten Tomatoes")
+                        ?.Value ?? "N/A"}
+                    </Text>
+                  </View>
+                )}
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </LinearGradient>
   );
 };
@@ -275,6 +277,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 50,
     overflow: "hidden",
+    alignItems: "center", // inner container ortalama
+  },
+  innerContainer: {
+    width: "100%",
+    maxWidth: 375,
+    flex: 1,
   },
   title: {
     fontSize: 32,
@@ -343,7 +351,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     fontFamily: "MontserratRegular",
   },
-  //Rotten Tomatoes badge
   rtBadge: {
     position: "absolute",
     bottom: 6,

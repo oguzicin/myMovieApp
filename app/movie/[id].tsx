@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
 import {
@@ -17,6 +17,7 @@ const API_KEY = "890ca110";
 
 export default function MovieDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const [movie, setMovie] = useState<any>(null);
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
   const headerFontSize = SCREEN_WIDTH * 0.08; // ekran genişliğine göre boyut
@@ -49,87 +50,90 @@ export default function MovieDetail() {
       colors={["#000000", "#290404", "#400707", "#000000"]}
       style={styles.gradientParent}
     >
-      {/* Moviez Başlığı */}
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={[styles.moviezHeader, { marginTop: 40 }]}>
-          m o v i e z
-        </Text>
-      </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {movie.Poster && movie.Poster !== "N/A" && (
-          <Image source={{ uri: movie.Poster }} style={styles.image} />
-        )}
+      <View style={styles.innerContainer}>
+        {/* Moviez Başlığı */}
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={[styles.moviezHeader, { marginTop: 40 }]}>
+            m o v i e z
+          </Text>
+        </TouchableOpacity>
 
-        <Text style={styles.title}>{movie.Title}</Text>
-        <Text style={styles.year}>{movie.Year}</Text>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {movie.Poster && movie.Poster !== "N/A" && (
+            <Image source={{ uri: movie.Poster }} style={styles.image} />
+          )}
 
-        {/* 🎬 Genre Tags */}
-        <View style={styles.genreContainer}>
-          {genres.map((genre: string, index: number) => (
-            <View key={index} style={styles.genreTag}>
-              <Text style={styles.genreText}>{genre}</Text>
-            </View>
-          ))}
-        </View>
+          <Text style={styles.title}>{movie.Title}</Text>
+          <Text style={styles.year}>{movie.Year}</Text>
 
-        {/*  Rotten Tomatoes Rating */}
-        {movie.Ratings &&
-          movie.Ratings.map((rating: any, index: number) => {
-            if (rating.Source === "Rotten Tomatoes") {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: 0,
-                  }}
-                >
-                  <Text style={{ fontSize: 20, marginRight: 6, opacity: 0.8 }}>
-                    🍅
-                  </Text>
-                  <Text
+          {/* 🎬 Genre Tags */}
+          <View style={styles.genreContainer}>
+            {genres.map((genre: string, index: number) => (
+              <View key={index} style={styles.genreTag}>
+                <Text style={styles.genreText}>{genre}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Rotten Tomatoes Rating */}
+          {movie.Ratings &&
+            movie.Ratings.map((rating: any, index: number) => {
+              if (rating.Source === "Rotten Tomatoes") {
+                return (
+                  <View
+                    key={index}
                     style={{
-                      color: "#FA320A",
-                      fontSize: 16,
-                      fontWeight: "600",
-                      paddingTop: 4,
-                      opacity: 0.8,
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginBottom: 0,
                     }}
                   >
-                    {rating.Value}
-                  </Text>
-                </View>
-              );
-            }
-            return null;
-          })}
+                    <Text style={{ fontSize: 20, marginRight: 6, opacity: 0.8 }}>
+                      🍅
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#FA320A",
+                        fontSize: 16,
+                        fontWeight: "600",
+                        paddingTop: 4,
+                        opacity: 0.8,
+                      }}
+                    >
+                      {rating.Value}
+                    </Text>
+                  </View>
+                );
+              }
+              return null;
+            })}
 
-        <Text style={styles.sectionTitle}>Plot</Text>
-        <Text style={styles.overview}>{movie.Plot}</Text>
+          <Text style={styles.sectionTitle}>Plot</Text>
+          <Text style={styles.overview}>{movie.Plot}</Text>
 
-        <Text style={styles.sectionTitle}>Runtime</Text>
-        <Text style={styles.info}>{movie.Runtime}</Text>
+          <Text style={styles.sectionTitle}>Runtime</Text>
+          <Text style={styles.info}>{movie.Runtime}</Text>
 
-        <Text style={styles.sectionTitle}>Director</Text>
-        <Text style={styles.info}>{movie.Director}</Text>
+          <Text style={styles.sectionTitle}>Director</Text>
+          <Text style={styles.info}>{movie.Director}</Text>
 
-        <Text style={styles.sectionTitle}>Writer</Text>
-        <Text style={styles.info}>{movie.Writer}</Text>
+          <Text style={styles.sectionTitle}>Writer</Text>
+          <Text style={styles.info}>{movie.Writer}</Text>
 
-        <Text style={styles.sectionTitle}>Actors</Text>
-        <Text style={styles.info}>{movie.Actors}</Text>
+          <Text style={styles.sectionTitle}>Actors</Text>
+          <Text style={styles.info}>{movie.Actors}</Text>
 
-        <Text style={styles.sectionTitle}>Language</Text>
-        <Text style={styles.info}>{movie.Language}</Text>
+          <Text style={styles.sectionTitle}>Language</Text>
+          <Text style={styles.info}>{movie.Language}</Text>
 
-        <Text style={styles.sectionTitle}>Country</Text>
-        <Text style={styles.info}>{movie.Country}</Text>
+          <Text style={styles.sectionTitle}>Country</Text>
+          <Text style={styles.info}>{movie.Country}</Text>
 
-        <Text style={styles.sectionTitle}>Awards</Text>
-        <Text style={styles.info}>{movie.Awards}</Text>
-      </ScrollView>
+          <Text style={styles.sectionTitle}>Awards</Text>
+          <Text style={styles.info}>{movie.Awards}</Text>
+        </ScrollView>
+      </View>
     </LinearGradient>
   );
 }
@@ -138,12 +142,17 @@ const styles = StyleSheet.create({
   gradientParent: {
     flex: 1,
     overflow: "hidden",
+    alignItems: "center", // inner container ortalama
+  },
+  innerContainer: {
+    width: "100%",
+    maxWidth: 375,
+    flex: 1,
   },
   moviezHeader: {
     fontFamily: "BBHSansBartle",
     color: "lightgrey",
     textAlign: "center",
-    marginTop: 40,
     marginBottom: 10,
     fontSize: 18,
   },
@@ -183,25 +192,6 @@ const styles = StyleSheet.create({
     color: "lightgrey",
     fontSize: 14,
     fontWeight: "500",
-    fontFamily: "MontserratRegular",
-  },
-
-  rottenContainer: {
-    flexDirection: "row", // emoji ve metni yan yana koy
-    justifyContent: "center", // yatayda ortala
-    alignItems: "center", // dikeyde ortala
-    marginTop: 12,
-    borderWidth: 20,
-  },
-  rottenEmoji: {
-    fontSize: 10,
-    marginRight: 6, // metin ile emoji arası boşluk
-  },
-  rottenText: {
-    color: "#FA320A", // Rotten Tomatoes teması
-    fontSize: 160,
-    borderWidth: 20,
-    fontWeight: "600",
     fontFamily: "MontserratRegular",
   },
 
